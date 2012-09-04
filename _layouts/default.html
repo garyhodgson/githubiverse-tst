@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+
+    <link href="css/jesl/jesl.min.css" rel="stylesheet" media="screen" type="text/css">
+
+    <link href="css/githubiverse.css" rel="stylesheet" media="screen" type="text/css">
+  
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"> </script>
+    <script src="js/jesl/jesl.min.js"> </script>
+    <script src="js/thingiview/Three.js"></script>
+    <script src="js/thingiview/plane.js"></script>
+    <script src="js/thingiview/thingiview.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script>
+      $(document).ready(function(){
+   
+        thingiurlbase = "js/thingiview";
+        thingiview = new Thingiview("viewer");
+        thingiview.setObjectColor('#C0D8F0');
+        thingiview.setBackgroundColor('#ffffff');
+        thingiview.initScene();
+
+        $('.stlfile').on('click', function(e){
+          thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $(this).text());
+        });
+
+        //thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $('.stlfile').first().text());
+
+      });
+
+    </script>
+
+  </head>
+  <body>
+
+    {{ content }}
+
+  </body>
+</html>
