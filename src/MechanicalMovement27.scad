@@ -1,26 +1,28 @@
-
+/* 
+* Parameters
+*/
 bearing_diameter = 10;
 bearing_bore_diameter = 3;
 bearing_height = 4;
-
 wheel_diameter = 90;
 wheel_bore_diameter = 3;
 wheel_height = 10;
-
 frame_thickness = 2;
 
 
-
-
-
-//wheel();
-
+/* 
+* Assembly / Printing
+*/
+wheel();
 small_wheel();
-
 // for print use rotate
 //translate([0, 0, 54]) rotate([0, 90, 0]) rotate([0, 0, 30])
 //frame();
 
+
+/* 
+* Modules
+*/
 module frame(){
 	a = wheel_diameter/2 + 15;
 	b = wheel_diameter/4 + 20;
