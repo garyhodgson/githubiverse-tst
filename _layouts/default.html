@@ -25,19 +25,25 @@
           <div class="description">{{ page.description | markdownify }}</div>
 
           <h5>Tags:</h5>
+          <div class="tags">
           {% for tag in page.tags %}
             <a href="#" class="tag"><span class="label">{{ tag }}</span></a>
           {% endfor %}
+          </div>
           
 
           <h3>Images</h3>
-          {% images  %}
+          <div class="images">
+            <ul class='thumbnails'>
+            </ul>
+          </div>
+
 
           <h3>Sources</h3>
-          <div class="sources">{{ content | srcs  }}</div>
+          <div class="sources"></div>
 
           <h3>STLs</h3>
-          <div class="stls">{{ content | stls  }}</div>
+          <div class="stls"></div>
 
           {{ content }}
 
@@ -52,7 +58,7 @@
     </div>
 
 
-
+<ul id="users"></ul>
 
     <!-- Javascript -->
 
@@ -62,7 +68,9 @@
     <script src="js/thingiview/Three.js"></script>
     <script src="js/thingiview/plane.js"></script>
     <script src="js/thingiview/thingiview.js"></script>
-
+    <script src="js/underscore/underscore.js"></script>
+    <script src="js/github/gh3.js"></script>
+    
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -76,14 +84,66 @@
         thingiview.setBackgroundColor('#ffffff');
         thingiview.initScene();
 
-        $('.stlfile').on('click', function(e){
+        $('.stlfile').live('click', function(e){
+          console.log($(this).text())
           thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $(this).text());
         });
 
-        if ($('.stlfile').first().text() != "") {
-          thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $('.stlfile').first().text());
-        }
-        
+        var githubUser = new Gh3.User("{{page.github_user}}")
+
+        var githubRepositories = new Gh3.Repositories(githubUser);
+        githubRepositories.fetch({page:1, per_page:100, direction : "desc"},"next", function (err, res) {
+          if(err) { throw "outch ..." }
+        });
+
+        var stls = $('.stls')
+        var sources = $('.sources')
+        var thumbnails = $('.thumbnails')
+
+        var githubRepo = new Gh3.Repository("{{page.github_repository}}", githubUser);
+        githubRepo.fetch(function (err, res) {
+          if(err) { throw "outch ..." }
+
+          githubRepo.fetchBranches(function (err, res) {
+            if(err) { throw "outch ..." }
+
+            var master = githubRepo.getBranchByName("{{page.github_branch}}");
+
+            master.fetchContents(function (err, res) {
+              if(err) { throw "outch ..." }
+
+              var dir = master.getDirByName('stl');
+              dir.fetchContents(function (err, res) {
+                if(err) { throw "outch ..." }
+                dir.eachContent(function (content) {
+                  stls.append("<li><a href=\"javascript://\" class=\"stlfile\">"+content.name+"</a></li>");
+                });
+                if ($('.stlfile').first().text() != "") {
+                  thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $('.stlfile').first().text());
+                }   
+              });
+
+              var dir2 = master.getDirByName('src');
+              dir2.fetchContents(function (err, res) {
+                if(err) { throw "outch ..." }
+                dir2.eachContent(function (content) {
+                  sources.append("<li><a href='../..{{ site.githubiverse.src_dir }}" + content.name + "' class=\"srcfile\">" + content.name + "</a></li>");
+                });
+              });
+
+              var dir3 = master.getDirByName('img');
+              dir3.fetchContents(function (err, res) {
+                if(err) { throw "outch ..." }
+                dir3.eachContent(function (content) {
+                  thumbnails.append("<li class='span2'><a class='thumbnail' href='../..{{ site.githubiverse.img_dir }}" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='../..{{ site.githubiverse.img_dir }}" + content.name + "' alt='" + content.name + "' /></a></li>");
+                });
+              });
+
+            });
+
+          })
+        });
+
       });
 
     </script>

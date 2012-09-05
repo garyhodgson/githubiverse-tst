@@ -8,6 +8,9 @@ description: An implementation of movement \#27 from ["501 Mechanical Movements"
 tags: [asd, qwe, yxc]
 tracker: http://garyhodgson.github.com/githubiverse-tracker
 
+github_user: garyhodgson
+github_repository: githubiverse-tst
+github_branch: master
 ---
 
 <h3>Links</h3>
