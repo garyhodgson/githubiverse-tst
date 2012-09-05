@@ -10,33 +10,5 @@ tracker: http://garyhodgson.github.com/githubiverse-tracker
 
 ---
 
-
-{% include header.html %}
-
-<h1 class="title">{{ page.title | markdownify }}</h1>
-<h2 class="author">Author: {{ page.author }}</h2>
-<h3 class="license">License: {{ page.license }}</h3>
-
-<h3>Description</h3>
-<div class="description">{{ page.description | markdownify }}</div>
-
-<h5 class="tags">Tags: 
-{% for tag in page.tags %}
-<a href="#" class="tag">{{ tag }}</a>
-{% endfor  %}
-</h5>
-
-<h3>Images</h3>
-<div class="images">{% images  %}</div>
-
-<h3>Sources</h3>
-<div class="sources">{{ "" | srcs  }}</div>
-
-<h3>STLs</h3>
-<div class="stls">{{ "" | stls  }}</div>
-
-<h4>Thingiview STL Preview:</h4>
-<div id="viewer" class="stlviewer"></div>
-
-* [Project Page](https://github.com/garyhodgson/githubiverse-tst)
-
+<h3>Links</h3>
+* [Project Page](https://github.com/garyhodgson/githubiverse-tst)          
