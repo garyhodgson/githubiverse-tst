@@ -30,3 +30,11 @@ body {
 	padding: 5px;
 	border-bottom: 1px dashed grey;	
 }
+
+#stls-section {
+	display: none;
+}
+
+#sources-section {
+	display: none;
+}
