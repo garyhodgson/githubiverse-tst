@@ -2,9 +2,8 @@
 <html>
   <head>
     <title>{{ page.title }}</title>
-
     
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet">
     <link href="css/lightbox/lightbox.css" rel="stylesheet" />
     <link href="css/githubiverse.css" rel="stylesheet" media="screen" type="text/css">
 
@@ -13,52 +12,50 @@
 
     <div class="container">
       <div class="row-fluid">
-        <div class="offset1 span10">
+        <div class="span12">
 
           {% include header.html %}
 
-          <h1 class="title">{{ page.title | markdownify }}</h1>
-          <h4 class="author">by {{ page.author }}</h4>
-          <h5 class="license">License: {{ page.license }}</h5>
-
-          <h3>Description</h3>
-          <div class="description">{{ page.description | markdownify }}</div>
-
-          <h5>Tags:</h5>
-          <div class="tags">
-          {% for tag in page.tags %}
-            <a href="#" class="tag"><span class="label">{{ tag }}</span></a>
-          {% endfor %}
-          </div>
+          <h1 id="title">{{ page.title }}</h1>
+          <h4 id="author">by {{ page.author }}</h4>
           
+          <div class="row-fluid">
+            <div class="span6">
 
-          <h3>Images</h3>
-          <div class="images">
-            <ul class='thumbnails'>
-            </ul>
+              <ul id='thumbnails' class='thumbnails'></ul>
+
+              <h3>Sources</h3>
+              <ul id="sources" class="nav nav-tabs nav-stacked"></ul>
+
+            </div>
+
+
+            <div class="span6">
+              <div class="description">{{ page.description | markdownify }}</div>
+
+              {{ content }}
+
+              <div class="tags">
+                <i class="icon-tags" title="tags"></i>
+                {% for tag in page.tags %}
+                  <a href="#" class="tag"><span class="label">{{ tag }}</span></a>
+                {% endfor %}
+              </div>
+
+              <h6 class="license">License: {{ page.license }}</h6>
+
+            <h3>STLs</h3>
+            <div id="viewer" class="stlviewer"></div>
+            <ul id="stls" class="nav nav-tabs nav-stacked"></ul>
+       
+            </div>
           </div>
 
-
-          <h3>Sources</h3>
-          <div class="sources"></div>
-
-          <h3>STLs</h3>
-          <div class="stls"></div>
-
-          {{ content }}
-
-          <h4>Thingiview STL Preview:</h4>
-          <div id="viewer" class="stlviewer"></div>
+          {% include footer.html %}
 
         </div>
       </div>
-
-      
-
     </div>
-
-
-<ul id="users"></ul>
 
     <!-- Javascript -->
 
@@ -77,7 +74,7 @@
 
     <script>
       $(document).ready(function(){
-   
+        autoloadSTL = false;
         thingiurlbase = "js/thingiview";
         thingiview = new Thingiview("viewer");
         thingiview.setObjectColor('#C0D8F0');
@@ -96,9 +93,9 @@
           if(err) { throw "outch ..." }
         });
 
-        var stls = $('.stls')
-        var sources = $('.sources')
-        var thumbnails = $('.thumbnails')
+        var stls = $('#stls')
+        var sources = $('#sources')
+        var thumbnails = $('#thumbnails')
 
         var githubRepo = new Gh3.Repository("{{page.github_repository}}", githubUser);
         githubRepo.fetch(function (err, res) {
@@ -118,7 +115,7 @@
                 dir.eachContent(function (content) {
                   stls.append("<li><a href=\"javascript://\" class=\"stlfile\">"+content.name+"</a></li>");
                 });
-                if ($('.stlfile').first().text() != "") {
+                if (autoloadSTL && $('.stlfile').first().text() != "") {
                   thingiview.loadSTL("../../{{ site.githubiverse.stl_dir }}" + $('.stlfile').first().text());
                 }   
               });
@@ -135,7 +132,7 @@
               dir3.fetchContents(function (err, res) {
                 if(err) { throw "outch ..." }
                 dir3.eachContent(function (content) {
-                  thumbnails.append("<li class='span2'><a class='thumbnail' href='{{ site.githubiverse.img_dir }}" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='{{ site.githubiverse.img_dir }}" + content.name + "' alt='" + content.name + "' /></a></li>");
+                  thumbnails.append("<li><a class='thumbnail' href='{{ site.githubiverse.img_dir }}" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='{{ site.githubiverse.img_dir }}" + content.name + "' alt='" + content.name + "' /></a></li>");
                 });
               });
 
