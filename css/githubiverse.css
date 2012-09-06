@@ -9,13 +9,7 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3edf9', endColorstr='#e3edf9',GradientType=1 ); /* IE6-9 */
 }
 
-.tags {
-	padding: 5px;
-	border-top: 1px dashed grey;	
-	border-bottom: 1px dashed grey;	
-}
-
-.stlviewer {
+#stlviewer {
 	width: 100%;
 	min-height: 300px;
 	border: 1px solid grey;
@@ -24,4 +18,15 @@ body {
 
 .imgfile {
 	width: 100px;
+}
+
+#description {
+	padding: 5px;
+	padding-bottom: 20px;
+	border-bottom: 1px dashed grey;	
+}
+
+.meta {
+	padding: 5px;
+	border-bottom: 1px dashed grey;	
 }
