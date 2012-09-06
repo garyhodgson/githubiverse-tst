@@ -5,8 +5,9 @@ slideshow:
 github_base: https://github.com/
 
 githubiverse:
-   master_dir: shared
+   master_dir: master
    img_dir: img
    stl_dir: stl
    src_dir: src
    autoloadSTL: true
+   show_forkme_ribbon: true

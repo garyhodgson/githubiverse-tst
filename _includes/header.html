@@ -1,4 +1,10 @@
 <header>
-	<h1><a href="{{ page.tracker }}">Githubiverse</a></h1>
+	<h1>
+		{% if page.tracker %}
+			<a href="{{ page.tracker }}">Githubiverse</a>
+		{% else %}
+			Githubiverse
+		{% endif %}
+	</h1>
 	<hr>
 </header>
