@@ -5,8 +5,8 @@ slideshow:
 github_base: https://github.com/
 
 githubiverse:
-   generate_thumbs: false
-   img_dir: shared/img/
-   stl_dir: shared/stl/
-   src_dir: shared/src/
-   thumb_dir: thumbs/
+   master_dir: shared
+   img_dir: img
+   stl_dir: stl
+   src_dir: src
+   autoloadSTL: true
