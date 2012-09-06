@@ -119,12 +119,7 @@
           thingiview.loadSTL("../../{{ site.githubiverse.master_dir }}/{{ site.githubiverse.stl_dir }}/" + $(this).text());
         });
 
-        var stls = $('#stls'),
-            stldownloads = $('#stldownloads'),
-            sources = $('#sources'),
-            sourcedownloads = $('#sourcedownloads'),
-            thumbnails = $('#thumbnails'),
-            githubUser = new Gh3.User("{{page.github_user}}"),
+        var githubUser = new Gh3.User("{{page.github_user}}"),
             githubRepositories = new Gh3.Repositories(githubUser),
             stl_file_count = 0,
             src_file_count = 0;
@@ -156,8 +151,8 @@
           }
 
           var fileGithubUrl = '{{ site.github_base }}'+content.user.login+'/'+content.repositoryName+'/blob/'+content.branchName+'/'+content.path;
-          sources.append("<li><a href='" + fileGithubUrl + "' target='_blank' title='View in Github' class=\"srcfile\">"+ dirname + content.name + "</a></li>");
-          sourcedownloads.append("<li><a class='btn-small btn-inverse' href='{{ site.githubiverse.master_dir }}/" + content.path + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
+          $('#sources').append("<li><a href='" + fileGithubUrl + "' target='_blank' title='View in Github' class=\"srcfile\">"+ dirname + content.name + "</a></li>");
+          $('#sourcedownloads').append("<li><a class='btn-small btn-inverse' href='{{ site.githubiverse.master_dir }}/" + content.path + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
         }
 
         function add_stl_dir(dir, dirname){
@@ -188,8 +183,8 @@
           if (dirname != ''){
             dirname = dirname+'/';
           }
-          stls.append("<li><a href=\"javascript://\" title='Preview' class=\"stlfile\">"+ dirname + content.name+"</a></li>");
-          stldownloads.append("<li><a class='btn-small btn-inverse' href='{{ site.githubiverse.master_dir }}/" + content.path + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
+          $('#stls').append("<li><a href=\"javascript://\" title='Preview' class=\"stlfile\">"+ dirname + content.name+"</a></li>");
+          $('#stldownloads').append("<li><a class='btn-small btn-inverse' href='{{ site.githubiverse.master_dir }}/" + content.path + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
         }
 
         githubRepositories.fetch({page:1, per_page:100, direction : "desc"},"next", function (err, res) {
@@ -208,7 +203,7 @@
             master.fetchContents(function (err, res) {
               if(err) { throw "Error fetching github repository contents." }
 
-              var stlDir = master.getDirByName('stl');              
+              var stlDir = master.getDirByName('{{ site.githubiverse.stl_dir }}');              
               if (stlDir == undefined){
                 no_stls();
               } else {
@@ -234,7 +229,7 @@
                 });                
               }
 
-              var srcDir = master.getDirByName('src');
+              var srcDir = master.getDirByName('{{ site.githubiverse.src_dir }}');
               if (srcDir == undefined){
                 no_sources();
               } else {
@@ -256,12 +251,12 @@
                 });              
               }
 
-              var imgDir = master.getDirByName('img');
+              var imgDir = master.getDirByName('{{ site.githubiverse.img_dir }}');
               if (imgDir != undefined){
                 imgDir.fetchContents(function (err, res) {
                   if(err) { throw "Error fetching contents for images." }
                   imgDir.eachContent(function (content) {
-                    thumbnails.append("<li><a class='thumbnail' href='{{ site.githubiverse.master_dir }}/{{ site.githubiverse.img_dir }}/" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='{{ site.githubiverse.master_dir }}/{{ site.githubiverse.img_dir }}/" + content.name + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");
+                    $('#thumbnails').append("<li><a class='thumbnail' href='{{ site.githubiverse.master_dir }}/{{ site.githubiverse.img_dir }}/" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='{{ site.githubiverse.master_dir }}/{{ site.githubiverse.img_dir }}/" + content.name + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");
                   });
                 });
               }
