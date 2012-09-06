@@ -86,7 +86,7 @@
 
         $('.stlfile').live('click', function(e){
           console.log($(this).text())
-          thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $(this).text());
+          thingiview.loadSTL("../../{{ site.githubiverse.stl_dir }}" + $(this).text());
         });
 
         var githubUser = new Gh3.User("{{page.github_user}}")
@@ -119,7 +119,7 @@
                   stls.append("<li><a href=\"javascript://\" class=\"stlfile\">"+content.name+"</a></li>");
                 });
                 if ($('.stlfile').first().text() != "") {
-                  thingiview.loadSTL("../..{{ site.githubiverse.stl_dir }}" + $('.stlfile').first().text());
+                  thingiview.loadSTL("../../{{ site.githubiverse.stl_dir }}" + $('.stlfile').first().text());
                 }   
               });
 
@@ -127,7 +127,7 @@
               dir2.fetchContents(function (err, res) {
                 if(err) { throw "outch ..." }
                 dir2.eachContent(function (content) {
-                  sources.append("<li><a href='../..{{ site.githubiverse.src_dir }}" + content.name + "' class=\"srcfile\">" + content.name + "</a></li>");
+                  sources.append("<li><a href='{{ site.githubiverse.src_dir }}" + content.name + "' class=\"srcfile\">" + content.name + "</a></li>");
                 });
               });
 
@@ -135,7 +135,7 @@
               dir3.fetchContents(function (err, res) {
                 if(err) { throw "outch ..." }
                 dir3.eachContent(function (content) {
-                  thumbnails.append("<li class='span2'><a class='thumbnail' href='../..{{ site.githubiverse.img_dir }}" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='../..{{ site.githubiverse.img_dir }}" + content.name + "' alt='" + content.name + "' /></a></li>");
+                  thumbnails.append("<li class='span2'><a class='thumbnail' href='{{ site.githubiverse.img_dir }}" + content.name + "' rel='lightbox[githubiverse]'><img class='imgfile' src='{{ site.githubiverse.img_dir }}" + content.name + "' alt='" + content.name + "' /></a></li>");
                 });
               });
 

@@ -5,7 +5,7 @@ slideshow:
 
 githubiverse:
    generate_thumbs: false
-   img_dir: /shared/img/
-   stl_dir: /shared/stl/
-   src_dir: /shared/src/
+   img_dir: shared/img/
+   stl_dir: shared/stl/
+   src_dir: shared/src/
    thumb_dir: thumbs/
