@@ -17,7 +17,7 @@ wheel();
 small_wheel();
 // for print use rotate
 //translate([0, 0, 54]) rotate([0, 90, 0]) rotate([0, 0, 30])
-//frame();
+frame();
 
 
 /* 
