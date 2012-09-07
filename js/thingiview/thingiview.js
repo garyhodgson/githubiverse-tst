@@ -612,6 +612,11 @@ Thingiview = function(containerId) {
     log("finished loading " + geometry.faces.length + " faces.");
   }
 
+  this.progressBarMessage = function(msg){
+    progressBar.style.display = 'block';
+    progressBar.innerHTML = msg;
+  }
+
   this.newWorker = function(cmd, param) {
     scope.setRotation(false);
   	

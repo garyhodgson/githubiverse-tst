@@ -1,6 +1,0 @@
-[submodule "tracker"]
-	path = tracker
-	url = git://github.com/garyhodgson/githubiverse-tst.git
-[submodule "master"]
-	path = master
-	url = git://github.com/garyhodgson/githubiverse-tst.git

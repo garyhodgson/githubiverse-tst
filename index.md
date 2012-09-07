@@ -5,7 +5,7 @@ title: "Mechanical Movement #27"
 author: Gary Hodgson
 license: GPL3
 tags: [mechanical movement, fun]
-tracker: http://garyhodgson.github.com/githubiverse-tracker
+#tracker: http://garyhodgson.github.com/githubiverse-tracker
 
 github_user: garyhodgson
 github_repository: githubiverse-tst
