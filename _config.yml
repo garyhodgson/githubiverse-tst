@@ -1,8 +1,1 @@
 github_base: https://github.com/
-
-githubiverse:
-   img_dir: img
-   stl_dir: stl
-   src_dir: src
-   autoloadSTL: true
-   show_forkme_ribbon: true

@@ -201,16 +201,16 @@ lightbox = new Lightbox options
       preloader = new Image;
       preloader.onload = function() {
         $image.attr('src', _this.album[imageNumber].link);
-        $image.width = preloader.width;
-        $image.height = preloader.height;
-        return _this.sizeContainer(preloader.width, preloader.height);
+        $image.width = Math.min(preloader.width, window.innerWidth);
+        $image.height = Math.min(preloader.height, window.innerHeight);
+        return _this.sizeContainer($image.width, $image.height);
       };
       preloader.src = this.album[imageNumber].link;
       this.currentImageIndex = imageNumber;
     };
 
     Lightbox.prototype.sizeOverlay = function() {
-      return $('#lightboxOverlay').width($(document).width()).height($(document).height());
+      return $('#lightboxOverlay').width($(window).width()).height($(window).height());
     };
 
     Lightbox.prototype.sizeContainer = function(imageWidth, imageHeight) {

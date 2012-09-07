@@ -9,8 +9,8 @@
 
   </head>
   <body>
-    {% if site.githubiverse.show_forkme_ribbon %}
-    <a href="{{site.github_base}}{{page.github_user}}/{{page.github_repository}}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>{% endif %}
+    {% if page.show_forkme_ribbon %}
+    <a href="{{page.github.base}}{{page.github.user}}/{{page.github.repository}}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>{% endif %}
 
     <div class="container">
       <div class="row-fluid">
@@ -55,8 +55,8 @@
                 {% endfor %}
               </div>
 
-              <div id="author" class="meta"><i class='icon-user' title="user"></i>&nbsp;<a href="{{ site.github_base }}{{ page.github_user }}">{{ page.github_user }}</a></div>
-              <div id="home" class="meta"><i class='icon-home' title="repository"></i>&nbsp;<a href="{{ site.github_base }}{{ page.github_repository }}">{{ page.github_repository }}</a></div>
+              <div id="author" class="meta"><i class='icon-user' title="user"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.user }}">{{ page.github.user }}</a></div>
+              <div id="home" class="meta"><i class='icon-home' title="repository"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.repository }}">{{ page.github.repository }}</a></div>
               <div id="license" class="meta"><i class='icon-file' title="license"></i>&nbsp;{{ page.license }}</div>
 
               <h3>STLs</h3>
@@ -108,7 +108,7 @@
       }
 
       $(document).ready(function(){
-        autoloadSTL = {{ site.githubiverse.autoloadSTL }};
+        autoloadSTL = {{ page.autoloadSTL }};
         thingiurlbase = "js/thingiview";
         thingiview = new Thingiview("stlviewer");
         thingiview.setObjectColor('#C0D8F0');
@@ -119,7 +119,7 @@
           loadStlString($(this).data('githubFile'));
         });
 
-        var githubUser = new Gh3.User("{{page.github_user}}"),
+        var githubUser = new Gh3.User("{{page.github.user}}"),
             githubRepositories = new Gh3.Repositories(githubUser),
             stl_file_count = 0,
             src_file_count = 0;
@@ -203,87 +203,143 @@
           });
         }
 
+        function showImages(imgDir){
+          if (imgDir != undefined){
+            imgDir.fetchContents(function (err, res) {
+              if(err) { throw "Error fetching contents for images." }
+              imgDir.eachContent(function (content) {
+                var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
+                $('#thumbnails').append("<li><a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='imgfile' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");
+              });
+            });
+          }
+        }
+
+        function showSources(srcDir){
+          if (srcDir == undefined) {
+            no_sources();
+            return;
+          }
+          srcDir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for sources." }
+            srcDir.eachContent(function (content) {
+              if (content.type == 'file'){
+                add_source_file(content, '');
+              } else if (content.type == 'dir'){
+                add_source_dir(content, '');
+              }
+            });
+
+            if (src_file_count == 0){
+              no_sources();
+            }
+          });
+        }
+
+        function showSTLs(stlDir){
+          if (stlDir == undefined){
+            no_stls();
+            return;
+          } 
+          stlDir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for stls." }
+
+            stlDir.eachContent(function (content) {
+                if (content.type == 'file'){
+                  add_stl_file(content, '');
+                } else if (content.type == 'dir'){
+                  add_stl_dir(content, '');
+                }
+            });
+
+            if (stl_file_count > 0){
+              if (autoloadSTL && $('.stlfile').first().text() != "") {
+                if ($('.stlfile').first().data('githubFile') != undefined){
+                  loadStlString($('.stlfile').first().data('githubFile'));  
+                }                      
+              }  
+            } else {
+              no_stls();
+            }
+          });
+        }
+
+        function getDirRecursive(path, parentDir,callback) {
+
+          parentDir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for images." }
+
+            if (path.indexOf("/") == -1){
+              callback(parentDir.getDirByName(path));
+              return
+            }
+
+            var nextDirName = path.substring(0, path.indexOf("/"));
+            var currentDir = parentDir.getDirByName(nextDirName);
+            var remainingPath = path.substring(path.indexOf("/")+1);
+
+            return getDirRecursive(remainingPath, currentDir,callback);
+          });        
+        }
+
+        function processDirectories(path, callback){
+          
+          if (path.indexOf("/") == -1){
+            var dir = master.getDirByName(path)
+            if (dir == undefined){
+              console.error("Unable to find directory in branch: ", path);
+              callback(null);
+              return false
+            }
+            callback(dir);
+          } else {
+            var nextDirName = path.substring(0, path.indexOf("/"));
+            var nextDir = master.getDirByName(nextDirName);
+            if (nextDir == undefined){
+              console.error("Unable to find directory in branch: ", nextDir);
+              callback(null);
+              return false
+            }
+            var remainingPath = path.substring(path.indexOf("/")+1);
+            getDirRecursive(remainingPath, nextDir, callback);
+          }
+        }
+
         githubRepositories.fetch({page:1, per_page:100, direction : "desc"},"next", function (err, res) {
           if(err) { throw "Error fetching github repositories." }
         });
 
-        githubRepo = new Gh3.Repository("{{page.github_repository}}", githubUser);
+        githubRepo = new Gh3.Repository("{{page.github.repository}}", githubUser);
         githubRepo.fetch(function (err, res) {
           if(err) { throw "Error fetching github repository." }
 
           githubRepo.fetchBranches(function (err, res) {
             if(err) { throw "Error fetching github branches." }
 
-            master = githubRepo.getBranchByName("{{page.github_branch}}");
+            master = githubRepo.getBranchByName("{{page.github.branch}}");
 
             master.fetchContents(function (err, res) {
               if(err) { throw "Error fetching github repository contents." }
 
-              var stlDir = master.getDirByName('{{ site.githubiverse.stl_dir }}');              
-              if (stlDir == undefined){
-                no_stls();
-              } else {
-                stlDir.fetchContents(function (err, res) {
-                  if(err) { throw "Error fetching contents for stls." }
+              processDirectories('{{ page.src_dir }}', showSources);
+              processDirectories('{{ page.img_dir }}', showImages);
+              processDirectories('{{ page.stl_dir }}', showSTLs);
 
-                  stlDir.eachContent(function (content) {
-                      if (content.type == 'file'){
-                        add_stl_file(content, '');
-                      } else if (content.type == 'dir'){
-                        add_stl_dir(content, '');
-                      }
-                  });
-
-                  if (stl_file_count > 0){
-                    if (autoloadSTL && $('.stlfile').first().text() != "") {
-                      if ($('.stlfile').first().data('githubFile') != undefined){
-                        loadStlString($('.stlfile').first().data('githubFile'));  
-                      }                      
-                    }  
-                  } else {
-                    no_stls();
-                  }
-                     
-                });                
-              }
-
-              var srcDir = master.getDirByName('{{ site.githubiverse.src_dir }}');
-              if (srcDir == undefined){
-                no_sources();
-              } else {
-                srcDir.fetchContents(function (err, res) {
-                  if(err) { throw "Error fetching contents for sources." }
-                  
-                  srcDir.eachContent(function (content) {
-                    if (content.type == 'file'){
-                      add_source_file(content, '');
-                    } else if (content.type == 'dir'){
-                      add_source_dir(content, '');
-                    }
-                  });
+              {% if page.description_file %}
                 
-                  if (src_file_count == 0){
-                    no_sources();
-                  }
-
-                });              
-              }
-
-              var imgDir = master.getDirByName('{{ site.githubiverse.img_dir }}');
-              if (imgDir != undefined){
-                imgDir.fetchContents(function (err, res) {
-                  if(err) { throw "Error fetching contents for images." }
-                  imgDir.eachContent(function (content) {
-                    var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
-                    $('#thumbnails').append("<li><a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='imgfile' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");
-                  });
+                var descriptionFile = master.getFileByName('{{page.description_file}}');
+                descriptionFile.fetchContent(function (err, res) {
+                  if(err) { throw "Error retrieving github description file." }
+                  $('#description').html(descriptionFile.getRawContent().replace(/\n/g,'<br>'))
                 });
-              }
+                
+              {% endif %}
 
             });
 
           })
         });
+
 
       });
 
