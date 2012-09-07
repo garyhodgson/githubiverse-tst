@@ -6,7 +6,7 @@ author: Gary Hodgson
 license: GPL3
 tags: [mechanical movement, fun]
 
-##### Optional. Uncomment the following and set the file in the root directory of your project that contains the project description, otherwise any text at the bottom of this file, after this yaml header, will be used.
+##### Optional. When uncommented appends the content of the file defined here to the project description.  Any text at the bottom of this file, after this yaml header, will be shown first.
 #description_file: readme.md
 
 ##### Optional & Experimental. Uncomment the following to include links to a website that tracks githubiverse projects.

@@ -30,3 +30,13 @@ body {
 	padding: 5px;
 	border-bottom: 1px dashed grey;	
 }
+
+#sources-section {
+	max-height: 800px;
+	overflow: auto;
+}
+
+#stls-section {
+	max-height: 800px;
+	overflow: auto;
+}
