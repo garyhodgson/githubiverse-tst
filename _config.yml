@@ -1,11 +1,6 @@
-slideshow:
-    width: 150
-    height: 100
-
 github_base: https://github.com/
 
 githubiverse:
-   master_dir: master
    img_dir: img
    stl_dir: stl
    src_dir: src

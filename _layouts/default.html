@@ -211,8 +211,6 @@
         githubRepo.fetch(function (err, res) {
           if(err) { throw "Error fetching github repository." }
 
-          console.log(githubRepo)
-
           githubRepo.fetchBranches(function (err, res) {
             if(err) { throw "Error fetching github branches." }
 
