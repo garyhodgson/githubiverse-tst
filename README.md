@@ -14,3 +14,8 @@ Instructions
 * Optionally, modify the html and css to suit your tastes.
 * Test locally with jekyll, or commit and push to github.
 * When pushed, view at http://yourusername.github.com/yourprojectname, an example project can be seen here: http://garyhodgson.github.com/githubiverse-tst
+
+
+License
+=======
+GPL3
