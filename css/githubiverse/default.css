@@ -27,7 +27,7 @@ body {
 }
 
 .meta {
-	padding: 5px;
+	padding-top: 7px;
 	border-bottom: 1px dashed grey;	
 }
 
@@ -39,4 +39,8 @@ body {
 #stls-section {
 	max-height: 800px;
 	overflow: auto;
+}
+
+#lead-image-container {
+	margin: 5px;
 }

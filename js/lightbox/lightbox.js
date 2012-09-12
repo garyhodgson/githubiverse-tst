@@ -3,6 +3,10 @@
 Lightbox v2.51
 by Lokesh Dhakar - http://www.lokeshdhakar.com
 
+
+Slight modification by Gary Hodgson: images larger than screen should be scaled down.
+
+
 For more information, visit:
 http://lokeshdhakar.com/projects/lightbox2/
 
@@ -50,8 +54,8 @@ lightbox = new Lightbox options
     function LightboxOptions() {
       this.fileLoadingImage = 'img/lightbox/loading.gif';
       this.fileCloseImage = 'img/lightbox/close.png';
-      this.resizeDuration = 700;
-      this.fadeDuration = 500;
+      this.resizeDuration = 100;
+      this.fadeDuration = 100;
       this.labelImage = "Image";
       this.labelOf = "of";
     }

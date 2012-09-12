@@ -2,15 +2,18 @@
 <html>
   <head>
     <title>Githubiverse: {{ page.title }} by {{ page.author }}</title>
+
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
     
     <link href="css/bootstrap/bootstrap.css" rel="stylesheet">
     <link href="css/lightbox/lightbox.css" rel="stylesheet" />
-    <link href="css/githubiverse.css" rel="stylesheet" media="screen" type="text/css">
+    <link href="css/githubiverse/default.css" rel="stylesheet" media="screen" type="text/css">
 
   </head>
   <body>
     {% if page.show_forkme_ribbon %}
-    <a href="{{page.github.base}}{{page.github.user}}/{{page.github.repository}}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>{% endif %}
+      <a href="{{page.github.base}}{{page.github.user}}/{{page.github.repository}}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    {% endif %}
 
     <div class="container">
       <div class="row-fluid">
@@ -25,7 +28,10 @@
           <div class="row-fluid">
             <div class="span6">
 
+              <div id="lead-image-container"></div>
+
               <ul id='thumbnails' class='thumbnails'></ul>
+
 
               <h3>Sources</h3>
               <div id="sources-section">
@@ -41,24 +47,50 @@
 
             </div>
 
-
             <div class="span6">
               
               <div id="description">
                 {{ content }}
               </div>
 
-              <div id="tags" class="meta">
-                <i class="icon-tags" title="tags"></i>&nbsp;
-                {% for tag in page.tags %}
-                  <a href="#" class="tag"><span class="label">{{ tag }}</span></a>
-                {% endfor %}
+              <div class="meta row-fluid">
+                <div class="span12">
+                  <div id="tags">
+                    <i class="icon-tags" title="tags"></i>&nbsp;
+                    {% for tag in page.tags %}
+                      <a href="#" class="tag"><span class="label">{{ tag }}</span></a>
+                    {% endfor %}
+                  </div>
+                </div>
               </div>
 
-              <div id="author" class="meta"><i class='icon-user' title="User"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.user }}">{{ page.github.user }}</a></div>
-              <div id="home" class="meta"><i class='icon-home' title="Repository"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.repository }}">{{ page.github.repository }}</a></div>
-              <div id="license" class="meta"><i class='icon-file' title="License"></i>&nbsp;{{ page.license }}</div>
-              <div id="download-all" class="meta"><i class='icon-download' title="Download Project"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.user }}/{{ page.github.repository }}/zipball/{{ page.github.branch }}">Download Project as Zip</a></div>
+              <div class="meta row-fluid">
+                <div class="span6">
+                  <div id="home"><i class='icon-home' title="Repository"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.repository }}">{{ page.github.repository }}</a></div>
+                </div>
+
+                <div class="span6">
+                  <div id="author"><i class='icon-user' title="User"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.user }}">{{ page.github.user }}</a></div>
+                </div>
+              </div>
+
+              <div class="meta row-fluid">
+                <div class="span6">
+                  <div id="license"><i class='icon-file' title="License"></i>&nbsp;{{ page.license }}</div>
+                </div>
+                <div class="span6">
+                  <div id="download-all"><i class='icon-download' title="Download Project"></i>&nbsp;<a href="{{ page.github.base }}{{ page.github.user }}/{{ page.github.repository }}/zipball/{{ page.github.branch }}">Download Project as Zip</a></div>
+                </div>
+              </div>
+
+              <div class="meta row-fluid">
+                <div class="span6">
+                  <div id="created"><i class='icon-play-circle' title="Created"></i>&nbsp;Created: </div>
+                </div>
+                <div class="span6">
+                  <div id="updated"><i class='icon-refresh' title="Updated"></i>&nbsp;Updated: </div>
+                </div>
+              </div>              
 
               <h3>STLs</h3>
               <div id="stlviewer"></div>
@@ -84,30 +116,24 @@
     <!-- Javascript -->
 
     <script src="http://code.jquery.com/jquery-1.8.1.min.js"> </script>
+    <script src="js/prettydate.js"> </script>
     <script src="js/bootstrap/bootstrap.min.js"></script>
-    <script src="js/lightbox/lightbox.js"></script>
+    <script src="js/lightbox/lightbox.min.js"></script>
     <script src="js/thingiview/Three.js"></script>
     <script src="js/thingiview/plane.js"></script>
-    <script src="js/thingiview/thingiview.js"></script>
-    <script src="js/underscore/underscore.js"></script>
-    <script src="js/github/gh3.js"></script>
+    <script src="js/thingiview/thingiview.min.js"></script>
+    <script src="js/underscore/underscore.min.js"></script>
+    <script src="js/github/gh3.min.js"></script>
     
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
     <script>
-
-      function no_stls() {
-        $('#stls-section').html('No STL Files Found.');
-      }
-
-      function no_sources() {
-        $('#sources-section').html('No Source Files Found.');
-      }
-
       $(document).ready(function(){
-        autoloadSTL = {{ page.autoloadSTL }};
+        autoloadSTL = {{ page.autoload_stl }};
+        leadImageName = '{{ page.lead_image }}';
+        showLeadImage = {{ page.show_lead_image }};
         thingiurlbase = "js/thingiview";
         thingiview = new Thingiview("stlviewer");
         thingiview.setObjectColor('#C0D8F0');
@@ -122,6 +148,14 @@
             githubRepositories = new Gh3.Repositories(githubUser),
             stl_file_count = 0,
             src_file_count = 0;
+
+        function no_stls() {
+          $('#stls-section').html('No STL Files Found.');
+        }
+
+        function no_sources() {
+          $('#sources-section').html('No Source Files Found.');
+        }
 
         function add_source_dir(dir, dirname){
           dir.fetchContents(function (err, res) {
@@ -151,7 +185,7 @@
 
           var fileGithubUrl = githubRepo.html_url + '/blob/' + content.branchName + '/' + content.path;
           var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
-          $('#sources').append("<li><a href='" + fileGithubUrl + "' target='_blank' title='View in Github' class=\"srcfile\">"+ dirname + content.name + "</a></li>");
+          $('#sources').append("<li><a href='" + fileGithubUrl + "' target='_githubiverse' title='View in Github' class=\"srcfile\">"+ dirname + content.name + "</a></li>");
           $('#sourcedownloads').append("<li><a class='btn-small btn-inverse' href='" + rawFileURL + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
         }
 
@@ -209,7 +243,12 @@
               imgDir.eachContent(function (content) {
                 if (content.type == 'file'){
                   var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
-                  $('#thumbnails').append("<li><a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='imgfile' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");                  
+
+                  if (showLeadImage && content.name == leadImageName){
+                    $('#lead-image-container').append("<a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='lead-image' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a>");
+                  } else {
+                    $('#thumbnails').append("<li><a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='imgfile' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");
+                  }
                 }
               });
             });
@@ -325,6 +364,9 @@
               processDirectories('{{ page.src_dir }}', showSources);
               processDirectories('{{ page.img_dir }}', showImages);
               processDirectories('{{ page.stl_dir }}', showSTLs);
+
+              $('#updated').append("&nbsp;"+prettyDate(githubRepo.updated_at));
+              $('#created').append("&nbsp;"+prettyDate(githubRepo.created_at));
 
               {% if page.description_file %}
                 
