@@ -28,7 +28,7 @@ stl_dir: stl
 src_dir: src
 
 ## The headline image
-lead_image: assembly.png
+lead_image: test-jig.jpg
 show_lead_image: true
 
 ## Preview the first STL in the list when the page loads.
