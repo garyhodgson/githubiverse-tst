@@ -7,6 +7,7 @@
 ## Uses distinct namespace. Jekyll settings should go at the root level.
 githubiverse:
     ## Metadata
+    uuid: "f8736600-ff82-4a92-a5e9-fdeeeeb259fe"
     title: "Mechanical Movement #27"
     author: Gary Hodgson
     license: GPL3
